@@ -1,0 +1,6 @@
+APPLICATION_NAME: secured-spring-boot
+NAMESPACE: puckboard-demo-test
+SA_NAME: jenkins
+SA_NAMESPACE: secured-spring-boot-build
+READINESS_RESPONSE: "status.:.UP"
+READINESS_PATH: "/health"
