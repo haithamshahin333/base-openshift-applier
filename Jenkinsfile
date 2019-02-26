@@ -112,9 +112,9 @@ pipeline {
     }
 
     stage('Scan Web Application') {
-    agent {
-      label 'zap'
-    } 
+      agent {
+        label 'zap'
+      } 
       steps {
 
         // run zap scanner
