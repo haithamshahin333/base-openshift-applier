@@ -87,7 +87,7 @@ objects:
               command:
               - /bin/bash
               - -c
-              - curl -s 'http://localhost:8080${READINESS_PATH}'
+              - curl -s 'http://localhost:${READINESS_PORT}${READINESS_PATH}'
                 |grep -iq '${READINESS_RESPONSE}'
         terminationGracePeriodSeconds: 60
     triggers:
@@ -135,6 +135,10 @@ parameters:
 - description: 'Custom hostname for http service route.  Leave blank for default hostname,
     e.g.: <application-name>-<project>.<default-domain-suffix>'
   name: HOSTNAME_HTTP
+- description: 'Port to check for app health'
+  name: READINESS_PORT
+  required: true
+  value: '8081'
 - description: 'URI to check for app health'
   name: READINESS_PATH
   required: true
