@@ -111,34 +111,38 @@ pipeline {
       }
     }
 
-    stages('Get a ZAP Pod') {
-        node('zap') {
-            stage('Scan Web Application') {
-              sh "/zap/zap-baseline.py -d -m 5 -x zaprpt.xml -t ${env.APP_DEV_HOST}"
-              publishHTML([
-                allowMissing: false, 
-                alwaysLinkToLastBuild: false, 
-                keepAll: true, 
-                reportDir: '/zap/wrk', 
-                reportFiles: 'baseline.html', 
-                reportName: 'ZAP Baseline Scan', 
-                reportTitles: 'ZAP Baseline Scan'
-              ])
-              //no mvn, so stash it and unstash later in pipeline on a maven node instead of ZAP node... 
-              //sh "mvn sonar:sonar -Dsonar.zaproxy.reportPath=/zap/wrk/zaprpt.xml"
-              stash name: "zaproxyreport", includes: "/zap/wrk/zaprpt.xml"
-            }
+    stage('Scan Web Application') {
+    agent {
+      label 'zap'
+    } 
+      steps {
 
-            stage('Publish ZAP Report') {
-              steps {
-                unstash "zaproxyreport" 
-                sh "mvn sonar:sonar -Dsonar.zaproxy.reportPath=/zap/wrk/zaprpt.xml"
-              }
-            }
-        }
+        // run zap scanner
+        sh "/zap/zap-baseline.py -d -m 5 -x zaprpt.xml -t ${env.APP_DEV_HOST}"
+
+        // publish report to jenkins
+        publishHTML([
+          allowMissing: false, 
+          alwaysLinkToLastBuild: false, 
+          keepAll: true, 
+          reportDir: '/zap/wrk', 
+          reportFiles: 'baseline.html', 
+          reportName: 'ZAP Baseline Scan', 
+          reportTitles: 'ZAP Baseline Scan'
+        ])
+
+        //no mvn, so stash it and unstash later in pipeline on a maven node instead of ZAP node... 
+        //sh "mvn sonar:sonar -Dsonar.zaproxy.reportPath=/zap/wrk/zaprpt.xml"
+        stash name: "zaproxyreport", includes: "/zap/wrk/zaprpt.xml"
+      }
     }
 
-
+    stage('Publish ZAP Report') {
+      steps {
+        unstash "zaproxyreport" 
+        sh "mvn sonar:sonar -Dsonar.zaproxy.reportPath=/zap/wrk/zaprpt.xml"
+      }
+    }
 
     stage('Promotion gate') {
       steps {
