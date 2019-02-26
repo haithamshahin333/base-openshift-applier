@@ -1,10 +1,8 @@
 APPLICATION_NAME: sample-spring-boot-application
 NAMESPACE: puckboard-demo-ci-cd
-SOURCE_REPOSITORY_URL: https://github.com/dwasinge/container-pipelines.git
-SOURCE_REPOSITORY_REF: secure-spring-boot
-CONTEXT_DIR: secure-spring-boot
-APPLICATION_SOURCE_REPO: https://github.com/dwasinge/sample-spring-boot-application
+SOURCE_REPOSITORY_URL: https://github.com/dwasinge/base-openshift-applier.git
+SOURCE_REPOSITORY_REF: master
+CONTEXT_DIR:
+APPLICATION_SOURCE_REPO: https://github.com/dwasinge/sample-spring-boot-application.git
 APPLICATION_SOURCE_REF: master
 PIPELINE_SCRIPT: Jenkinsfile
-
-

@@ -132,10 +132,10 @@ pipeline {
     }
 
     stage('Publish ZAP Report') {
-
-      unstash "zaproxyreport" 
-      sh "mvn sonar:sonar -Dsonar.zaproxy.reportPath=/zap/wrk/zaprpt.xml"
-
+      steps {
+        unstash "zaproxyreport" 
+        sh "mvn sonar:sonar -Dsonar.zaproxy.reportPath=/zap/wrk/zaprpt.xml"
+      }
     }
 
     stage('Promotion gate') {
