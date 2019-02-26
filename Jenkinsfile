@@ -111,9 +111,8 @@ pipeline {
       }
     }
 
-    stage('Get a ZAP Pod') {
+    stages('Get a ZAP Pod') {
         node('zap') {
-          stages {
             stage('Scan Web Application') {
               sh "/zap/zap-baseline.py -d -m 5 -x zaprpt.xml -t ${env.APP_DEV_HOST}"
               publishHTML([
@@ -129,16 +128,17 @@ pipeline {
               //sh "mvn sonar:sonar -Dsonar.zaproxy.reportPath=/zap/wrk/zaprpt.xml"
               stash name: "zaproxyreport", includes: "/zap/wrk/zaprpt.xml"
             }
-          }
+
+            stage('Publish ZAP Report') {
+              steps {
+                unstash "zaproxyreport" 
+                sh "mvn sonar:sonar -Dsonar.zaproxy.reportPath=/zap/wrk/zaprpt.xml"
+              }
+            }
         }
     }
 
-    stage('Publish ZAP Report') {
-      steps {
-        unstash "zaproxyreport" 
-        sh "mvn sonar:sonar -Dsonar.zaproxy.reportPath=/zap/wrk/zaprpt.xml"
-      }
-    }
+
 
     stage('Promotion gate') {
       steps {
