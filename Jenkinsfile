@@ -34,9 +34,9 @@ pipeline {
   stages {
 
     // Checkout source code
-    // This is required as Pipeline code is originally checkedout to
-    // Jenkins Master but this will also pull this same code to this slave
-    stage('Git Checkout') {
+    // This is required as Pipeline code is originally checked out
+    // so this will pull the application source code to this slave
+    stage('Git Checkout Application') {
       steps {
         // Turn off Git's SSL cert check, uncomment if needed
         // sh 'git config --global http.sslVerify false'
@@ -47,6 +47,7 @@ pipeline {
     // Run Maven build, skipping tests
     stage('Build'){
       steps {
+        sh "printenv"
         sh "mvn -B clean install -DskipTests=true -f ${POM_FILE}"
       }
     }
@@ -108,6 +109,33 @@ pipeline {
       steps {
         verifyDeployment(projectName: env.DEV, targetApp: env.APP_NAME)
       }
+    }
+
+    stage('Get a ZAP Pod') {
+        node('zap') {
+            stage('Scan Web Application') {
+              sh "/zap/zap-baseline.py -d -m 5 -x zaprpt.xml -t ${env.APP_DEV_HOST}"
+              publishHTML([
+                allowMissing: false, 
+                alwaysLinkToLastBuild: false, 
+                keepAll: true, 
+                reportDir: '/zap/wrk', 
+                reportFiles: 'baseline.html', 
+                reportName: 'ZAP Baseline Scan', 
+                reportTitles: 'ZAP Baseline Scan'
+              ])
+              //no mvn, so stash it and unstash later in pipeline on a maven node instead of ZAP node... 
+              //sh "mvn sonar:sonar -Dsonar.zaproxy.reportPath=/zap/wrk/zaprpt.xml"
+              stash name: "zaproxyreport", includes: "/zap/wrk/zaprpt.xml"
+            }
+        }
+    }
+
+    stage('Publish ZAP Report') {
+
+      unstash "zaproxyreport" 
+      sh "mvn sonar:sonar -Dsonar.zaproxy.reportPath=/zap/wrk/zaprpt.xml"
+
     }
 
     stage('Promotion gate') {

@@ -1,6 +1,6 @@
-APPLICATION_NAME: secured-spring-boot
+APPLICATION_NAME: sample-spring-boot-application
 NAMESPACE: puckboard-demo-dev
 SA_NAME: jenkins
-SA_NAMESPACE: secured-spring-boot-build
-READINESS_RESPONSE: "status.:.UP"
-READINESS_PATH: "/health"
+SA_NAMESPACE: puckboard-demo-ci-cd
+READINESS_RESPONSE: "{"status":"UP"}"
+READINESS_PATH: "/actuator/health"
