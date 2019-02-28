@@ -2,9 +2,9 @@
 - name: Deploy Spring Boot Application
   hosts: seed-hosts
   vars:
-    ci_cd_namespace: puckboard-demo-ci-cd
-    dev_namespace: puckboard-demo-dev
-    test_namespace: puckboard-demo-test
+    ci_cd_namespace: puckboard-hs-ci-cd
+    dev_namespace: puckboard-hs-dev
+    test_namespace: puckboard-hs-test
   tasks:
     - include_role:
         name: openshift-applier/roles/openshift-applier
