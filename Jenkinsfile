@@ -47,7 +47,6 @@ pipeline {
     // Run Maven build, skipping tests
     stage('Build'){
       steps {
-        sh "printenv"
         sh "mvn -B clean install -DskipTests=true -f ${POM_FILE}"
       }
     }
@@ -111,6 +110,7 @@ pipeline {
       }
     }
 
+/*
     stage('Scan Web Application') {
       agent {
         label 'zap'
@@ -143,6 +143,7 @@ pipeline {
         sh "mvn sonar:sonar -Dsonar.zaproxy.reportPath=/zap/wrk/zaprpt.xml"
       }
     }
+*/
 
     stage('Promotion gate') {
       steps {
