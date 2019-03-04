@@ -44,6 +44,14 @@ pipeline {
       }
     }
 
+    //verify nexus is up
+
+    stage('Wait for Nexus') {
+      steps {
+        verifyDeployment(targetApp: "nexus", projectName: env.BUILD)
+      }
+    }
+
     // Run Maven build, skipping tests
     stage('Build'){
       steps {
