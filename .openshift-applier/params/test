@@ -1,5 +1,5 @@
 APPLICATION_NAME: sample-spring-boot-application
-NAMESPACE: puckboard-hs-test
+NAMESPACE: sandbox-pd-test
 SA_NAME: jenkins
 SA_NAMESPACE: puckboard-hs-ci-cd
 READINESS_PORT: 8081

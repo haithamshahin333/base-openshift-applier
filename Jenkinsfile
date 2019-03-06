@@ -66,25 +66,25 @@ pipeline {
       }
     }
 
-    stage ('Code Analysis') {
-        steps {
-          sonarqubeStaticAnalysis(
-            buildServerWebHookName: "jenkins",
-            buildServerWebHookUrl: "${JENKINS_URL}sonarqube-webhook/",
-            dependencyCheckReportDir: "target",
-            dependencyCheckReportFiles: "dependency-check-report.html",
-            dependencyCheckReportName: "OWASP Dependency Check Report",
-            dependencyCheckKeepAll: true,
-            dependencyCheckAlwaysLinkToLastBuild: true,
-            dependencyCheckAllowMissing: true,
-            unitTestReportDir: "target/site/jacoco/",
-            unitTestReportFiles: "index.html",
-            unitTestReportName: "Jacoco Unit Test Report",
-            unitTestKeepAll: true,
-            unitTestAlwaysLinkToLastBuild: false,
-            unitTestAllowMissing: true)
-        }
-    }
+    // stage ('Code Analysis') {
+    //     steps {
+    //       sonarqubeStaticAnalysis(
+    //         buildServerWebHookName: "jenkins",
+    //         buildServerWebHookUrl: "${JENKINS_URL}sonarqube-webhook/",
+    //         dependencyCheckReportDir: "target",
+    //         dependencyCheckReportFiles: "dependency-check-report.html",
+    //         dependencyCheckReportName: "OWASP Dependency Check Report",
+    //         dependencyCheckKeepAll: true,
+    //         dependencyCheckAlwaysLinkToLastBuild: true,
+    //         dependencyCheckAllowMissing: true,
+    //         unitTestReportDir: "target/site/jacoco/",
+    //         unitTestReportFiles: "index.html",
+    //         unitTestReportName: "Jacoco Unit Test Report",
+    //         unitTestKeepAll: true,
+    //         unitTestAlwaysLinkToLastBuild: false,
+    //         unitTestAllowMissing: true)
+    //     }
+    // }
 
     // Build Container Image using the artifacts produced in previous stages
     stage('Build Container Image'){
